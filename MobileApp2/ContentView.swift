@@ -9,13 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationView{
+            VStack{
+                Text("Welcome to my app")
+                NavigationLink(destination: SplashScreen(), label: {
+                    Text("Go to calculator")
+                })
+                
+            }
         }
-        .padding()
+        
+
     }
 }
 
