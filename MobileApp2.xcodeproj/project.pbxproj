@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6BD8B93D2B88064700F935BB /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD8B93C2B88064700F935BB /* SplashScreen.swift */; };
+		6BD8B93D2B88064700F935BB /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD8B93C2B88064700F935BB /* SplashScreenView.swift */; };
 		6BD8B93F2B88079B00F935BB /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD8B93E2B88079B00F935BB /* HomeScreen.swift */; };
 		6BD8B9432B8807F600F935BB /* ProductListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD8B9422B8807F600F935BB /* ProductListScreen.swift */; };
 		6BD8B9452B88082F00F935BB /* GroupListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD8B9442B88082F00F935BB /* GroupListScreen.swift */; };
@@ -19,7 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		6BD8B93C2B88064700F935BB /* SplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
+		6BD8B93C2B88064700F935BB /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		6BD8B93E2B88079B00F935BB /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		6BD8B9422B8807F600F935BB /* ProductListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListScreen.swift; sourceTree = "<group>"; };
 		6BD8B9442B88082F00F935BB /* GroupListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListScreen.swift; sourceTree = "<group>"; };
@@ -63,7 +63,7 @@
 			children = (
 				6BEB922E2B8800F600B8190B /* MobileApp2App.swift */,
 				6BEB92302B8800F600B8190B /* ContentView.swift */,
-				6BD8B93C2B88064700F935BB /* SplashScreen.swift */,
+				6BD8B93C2B88064700F935BB /* SplashScreenView.swift */,
 				6BD8B93E2B88079B00F935BB /* HomeScreen.swift */,
 				6BD8B9442B88082F00F935BB /* GroupListScreen.swift */,
 				6BD8B9422B8807F600F935BB /* ProductListScreen.swift */,
@@ -156,7 +156,7 @@
 				6BD8B9472B88084C00F935BB /* ShoppingCartScreen.swift in Sources */,
 				6BD8B9452B88082F00F935BB /* GroupListScreen.swift in Sources */,
 				6BD8B93F2B88079B00F935BB /* HomeScreen.swift in Sources */,
-				6BD8B93D2B88064700F935BB /* SplashScreen.swift in Sources */,
+				6BD8B93D2B88064700F935BB /* SplashScreenView.swift in Sources */,
 				6BEB92312B8800F600B8190B /* ContentView.swift in Sources */,
 				6BEB922F2B8800F600B8190B /* MobileApp2App.swift in Sources */,
 			);

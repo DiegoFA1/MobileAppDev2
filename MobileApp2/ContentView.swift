@@ -12,9 +12,7 @@ struct ContentView: View {
         NavigationView{
             VStack{
                 Text("Welcome to my app")
-                NavigationLink(destination: SplashScreen(), label: {
-                    Text("Go to calculator")
-                })
+        
                 
             }
         }
