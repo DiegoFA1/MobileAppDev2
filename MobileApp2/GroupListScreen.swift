@@ -23,6 +23,8 @@ struct GroupListScreen: View {
         Group(name: "Clothing")
     
     ]
+    @State private var showingConfirmation = false
+    @State private var selectedGroup: Group? = nil
     
     
     
@@ -34,45 +36,78 @@ struct GroupListScreen: View {
         NavigationView{
             
             VStack{
-                    
-                    List{
-                        ForEach(groupList){ group in NavigationLink(destination: ProductListScreen(), label: {
-                            Text(group.name)
-                            Button(action: {deleteGroup(groupType: group)}, label: {
+                
+                List{
+                    ForEach(groupList){ group in
+                        HStack{
+                            NavigationLink(destination: ProductListScreen()){
+                                Text(group.name)
+                            }
+                            Spacer()
+                            Button(action: {
+                                showingConfirmation = true
+                                selectedGroup = group
+                                //                                deleteGroup(groupType: group)
+                            }, label: {
                                 Image(systemName: "xmark")
-                                    .frame(width:50 ,height: 50)
-                            })                        }
-                        
-                        )}
+                                //                                .frame(width:50 ,height: 50)
+                                    .foregroundColor(.red)
+                            })
+                            .buttonStyle(PlainButtonStyle())
                             
+                        }
+                    }
+                }
+                    
+                    
+                    
+                    .alert(isPresented: $showingConfirmation) {
+                        Alert(
+                            title: Text("Are you sure?"),
+                            message: Text("Do you want to delete \(selectedGroup?.name ?? "")?"),
+                            primaryButton: .destructive(Text("Delete")) {
+                                if let group = selectedGroup {
+                                    deleteGroup(groupType: group)
+                                }
+                                selectedGroup = nil
+                            },
+                            secondaryButton: .cancel(){
+                                selectedGroup = nil
+                                
+                            }
+                        )
+                    }
+                    
+                    
+                    
+                    
+                    
+                    .navigationTitle("Product Groups")
+                    
+                    
+                    
+                    
+                    VStack(alignment: .leading){
+                        
+                        Text("Add New Group Below")
+                            .padding(.horizontal)
+                        
+                        HStack(alignment: .top){
+                            TextField("",text:$newGroupName)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .padding()
+                            
+                            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                                Image(systemName: "plus")
+                                    .padding(.trailing)
+                                    .font(.system(size: 30))
+                            }).padding(.bottom)
+                            
+                        }
                         
                         
                     }
                     
-                    
-                
-                
-                
-                .navigationTitle("Product Groups")
-                
-                
-                VStack(alignment: .leading){
-                    
-                    Text("Add New Group Below")
-                        .padding(.horizontal)
-                        
-                    HStack(alignment: .top){
-                        TextField("",text:$newGroupName)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding()
-                        
-                        Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
-                            Image(systemName: "plus")
-                                .padding(.trailing)
-                                .font(.system(size: 30))
-                        }).padding()
-                        
-                    }
                     
                     
                 }
@@ -82,9 +117,6 @@ struct GroupListScreen: View {
             }
             
             
-            
-        }
-        
         
     }
     
