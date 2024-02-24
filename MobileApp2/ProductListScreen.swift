@@ -20,26 +20,34 @@ class Product: Identifiable {
 }
 
 struct ProductListScreen: View {
-    @State private var newProductName = ""
-    @State private var newProductPrice = ""
-    @State private var productList: [Product] = [
-        Product(name: "Tomato", price: 2.49, quantity: 0),
-        Product(name: "Pineapple", price: 5.99, quantity: 0),
-        Product(name: "Red Pepper", price: 3.49, quantity: 0),
-        Product(name: "Mixed Nuts", price: 22.75, quantity: 0)
-    ]
-    
-    var body: some View {
-        //NavigationView{
+        @State private var newProductName = ""
+        @State private var newProductPrice = ""
+        @State private var productList: [Product] = [
+            Product(name: "Grape Tomato", price: 2.49, quantity: 0),
+            Product(name: "Pineapple", price: 5.99, quantity: 0),
+            Product(name: "Red Pepper", price: 3.49, quantity: 0),
+            Product(name: "Mixed Nuts", price: 22.75, quantity: 0)
+        ]
+        
+        var body: some View {
+            NavigationView{
             VStack{
                 // Display All Products
                 List{
+                    HStack(alignment: .top){
+                        Text("Name").frame(width: 80, alignment: .leading)
+                        Spacer()
+                        Text("Price").frame(width: 60, alignment: .leading)
+                        Spacer()
+                        Text("Quatity")
+                    }
+                    .fontWeight(.bold)
                     ForEach(productList.indices, id: \.self){ index in
                         let product = productList[index]
                         HStack(spacing: 10){
-                            Text(product.name)
+                            Text(product.name).frame(width: 80, alignment: .leading)
                             Spacer()
-                            Text(String(format: "$%.2f", product.price))
+                            Text(String(format: "$%.2f", product.price)).frame(width: 60, alignment: .leading)
                             Spacer()
                             Stepper(value:$productList[index].quantity, in:0...100){
                                 Text("\(productList[index].quantity)")
@@ -49,11 +57,11 @@ struct ProductListScreen: View {
                 }
                 
                 //View Cart Button
-                Button(action: {viewCart()}){
+                NavigationLink(destination: ShoppingCartScreen()){
                     Text("View Cart")
-                    .padding(.trailing)
-                        .font(.system(size: 15))
-                }.padding()
+                        .font(.system(size: 20))
+                }
+                .navigationTitle("Product List")
                 
                 // Add New Product Area
                 VStack(alignment: .leading){
@@ -86,8 +94,9 @@ struct ProductListScreen: View {
                 }
                 .padding()
             }
-           
+            
         }
+    }
                         
         func addProduct(name: String, price: Double){
 //            let product = Product(name: name, price: price, quantity: 0);
@@ -100,7 +109,6 @@ struct ProductListScreen: View {
             //navigate to cart page
         }
 }
-                
                 
 
 #Preview {
