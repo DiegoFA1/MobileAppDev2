@@ -17,6 +17,7 @@ class DBHelper{
         self.dropGroupTable()
         self.createGroupTable()
         
+        
     }
     
     func create_db() -> OpaquePointer? {
@@ -71,7 +72,7 @@ class DBHelper{
             sqlite3_bind_text(statement, 2, (name as NSString).utf8String, -1, nil)
             
             if sqlite3_step(statement) == SQLITE_DONE{
-                print ("Inserted \(name)")
+                print ("Group \(name) added to database")
             }else{
                 let errmsg = String(cString: sqlite3_errmsg(db))
                 print("error inserting: \(errmsg)")
@@ -87,14 +88,12 @@ class DBHelper{
     
     func readGroups() -> [Group]{
         var groupList = [Group]()
-        print("Here")
-        
+   
         let query = "SELECT * FROM groups;"
         var statement: OpaquePointer? = nil
         if sqlite3_prepare_v2(db, query, -1, &statement, nil ) == SQLITE_OK{
             while sqlite3_step(statement) == SQLITE_ROW{
                 let namedb = String(describing: String(cString: sqlite3_column_text(statement,1)))
-                print(namedb)
                 let group = Group(name: namedb)
                 groupList.append(group)
             }
@@ -105,7 +104,26 @@ class DBHelper{
         return groupList;
     }
     
-    
+    func deleteGroup(name:String){
+        let deleteQuery = "DELETE FROM groups WHERE name = ?;"
+        var statement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(self.db, deleteQuery, -1, &statement, nil) == SQLITE_OK{
+            sqlite3_bind_text(statement, 1, (name as NSString).utf8String, -1, nil)
+            
+            if sqlite3_step(statement) != SQLITE_DONE {
+                let errmsg = String(cString: sqlite3_errmsg(db))
+                print("error deleting group: \(errmsg)")
+            } else{
+                print("Group \(name) deteled")
+            }
+            
+            
+        }
+        
+        
+        
+    }
     
     
     

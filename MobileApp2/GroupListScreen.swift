@@ -69,7 +69,7 @@ struct GroupListScreen: View {
                             message: Text("Do you want to delete \(selectedGroup?.name ?? "")?"),
                             primaryButton: .destructive(Text("Delete")) {
                                 if let group = selectedGroup {
-                                    deleteGroup(groupType: group)
+                                    deleteGroup(groupName: group.name)
                                 }
                                 selectedGroup = nil
                             },
@@ -127,16 +127,15 @@ struct GroupListScreen: View {
     }
     
     func addGroup(groupName: String){
-        print(groupName)
         db.insertGroup1(name: groupName)
         groupList = db.readGroups()
+        newGroupName = ""
         
     }
     
-    func deleteGroup(groupType: Group){
-        if let index = groupList.firstIndex(where: { $0.name == groupType.name}){
-            groupList.remove(at: index)
-        }
+    func deleteGroup(groupName: String){
+        db.deleteGroup(name: groupName)
+        groupList = db.readGroups()
     }
     
     
