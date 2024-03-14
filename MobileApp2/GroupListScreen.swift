@@ -15,24 +15,26 @@ class Group: Identifiable, ObservableObject{
     }
 }
 
+let db = DBHelper()
+
 struct GroupListScreen: View {
+    
+    
+    
+    
     @State private var newGroupName = ""
-    @State private var groupList: [Group] = [
-    
-        Group(name: "Groceries"),
-        Group(name: "Clothing")
-    
-    ]
+    @State private var groupList: [Group] = []
     @State private var showingConfirmation = false
     @State private var selectedGroup: Group? = nil
     
     
     
     
-    
-    
-    
     var body: some View {
+        
+        
+        
+        
         NavigationView{
             
             VStack{
@@ -97,7 +99,9 @@ struct GroupListScreen: View {
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                                 .padding()
                             
-                            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                            Button(action: {
+                                addGroup(groupName: newGroupName)
+                            }, label: {
                                 Image(systemName: "plus")
                                     .padding(.trailing)
                                     .font(.system(size: 30))
@@ -110,7 +114,9 @@ struct GroupListScreen: View {
                     
                     
                     
-                }
+            }.onAppear{
+                groupList = db.readGroups()
+            }
                 
                 
                 
@@ -120,7 +126,10 @@ struct GroupListScreen: View {
         
     }
     
-    func addGroup(groupType: Group){
+    func addGroup(groupName: String){
+        print(groupName)
+        db.insertGroup1(name: groupName)
+        groupList = db.readGroups()
         
     }
     
