@@ -35,7 +35,7 @@ struct GroupListScreen: View {
         
         
         
-        NavigationView{
+//        NavigationView{
             
             VStack{
                 
@@ -115,7 +115,7 @@ struct GroupListScreen: View {
                     
                     
             }.onAppear{
-                groupList = db.readGroups()
+                self.groupList = DBHelper.shared.readGroups()
             }
                 
                 
@@ -124,7 +124,7 @@ struct GroupListScreen: View {
             
             
         
-    }
+
     
     func addGroup(groupName: String){
         db.insertGroup1(name: groupName)

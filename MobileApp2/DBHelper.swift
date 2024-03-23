@@ -11,11 +11,12 @@ import SQLite3
 class DBHelper{
     var db: OpaquePointer?
     var path: String = "shoppingDb.sqlite"
-    
+    static let shared = DBHelper()
     init(){
         self.db = create_db()
         self.dropGroupTable()
         self.createGroupTable()
+        self.createProductTable()
         
         
     }
@@ -124,6 +125,114 @@ class DBHelper{
         
         
     }
+    
+    func createProductTable(){
+        let createProductTableQuery = "CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price REAL, quantity INTEGER);"
+        var createTableStatement: OpaquePointer? = nil
+        
+        if sqlite3_prepare_v2(self.db, createProductTableQuery, -1, &createTableStatement, nil) == SQLITE_OK {
+            if sqlite3_step(createTableStatement) == SQLITE_DONE {
+                print("Product table created.")
+            } else {
+                let errmsg = String(cString: sqlite3_errmsg(db))
+                print("error creating product table: \(errmsg)")
+            }
+        }
+        sqlite3_finalize(createTableStatement)
+    }
+    
+    
+    func insertProduct(name: String, price: Double, quantity: Int) {
+        let insertQuery = "INSERT INTO products (name, price, quantity) VALUES (?, ?, ?);"
+        var insertStatement: OpaquePointer? = nil
+        
+        if sqlite3_prepare_v2(db, insertQuery, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(insertStatement, 1, (name as NSString).utf8String, -1, nil)
+            sqlite3_bind_double(insertStatement, 2, price)
+            sqlite3_bind_int(insertStatement, 3, Int32(quantity))
+            
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                print("Successfully inserted product.")
+            } else {
+                let errmsg = String(cString: sqlite3_errmsg(db))
+                print("failure inserting product: \(errmsg)")
+            }
+        } else {
+            let errmsg = String(cString: sqlite3_errmsg(db))
+            print("failure preparing insert: \(errmsg)")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+
+    
+    
+    func readProducts() -> [Product] {
+        let query = "SELECT * FROM products;"
+        var queryStatement: OpaquePointer? = nil
+        var productList = [Product]()
+        
+        if sqlite3_prepare_v2(db, query, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                //let id = sqlite3_column_int(queryStatement, 0)
+                let name = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let price = sqlite3_column_double(queryStatement, 2)
+                let quantity = sqlite3_column_int(queryStatement, 3)
+                let product = Product(id: 0, name: name, price: price, quantity: Int(quantity))
+                productList.append(product)
+            }
+        } else {
+            let errmsg = String(cString: sqlite3_errmsg(db))
+            print("failure reading products: \(errmsg)")
+        }
+        sqlite3_finalize(queryStatement)
+        return productList
+    }
+
+    
+    func deleteProduct(id: Int) {
+        let deleteQuery = "DELETE FROM products WHERE id = ?;"
+        var deleteStatement: OpaquePointer? = nil
+        
+        if sqlite3_prepare_v2(db, deleteQuery, -1, &deleteStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(deleteStatement, 1, Int32(id))
+            
+            if sqlite3_step(deleteStatement) == SQLITE_DONE {
+                print("Successfully deleted product.")
+            } else {
+                let errmsg = String(cString: sqlite3_errmsg(db))
+                print("failure deleting product: \(errmsg)")
+            }
+        } else {
+            let errmsg = String(cString: sqlite3_errmsg(db))
+            print("failure preparing delete: \(errmsg)")
+        }
+        sqlite3_finalize(deleteStatement)
+    }
+    
+    func updateProductQuantity(id: Int, quantity: Int) {
+        let updateQuery = "UPDATE products SET quantity = ? WHERE id = ?;"
+        var updateStatement: OpaquePointer? = nil
+        
+        if sqlite3_prepare_v2(db, updateQuery, -1, &updateStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(updateStatement, 1, Int32(quantity))
+            sqlite3_bind_int(updateStatement, 2, Int32(id))
+            
+            if sqlite3_step(updateStatement) == SQLITE_DONE {
+                print("Successfully updated product quantity.")
+            } else {
+                let errmsg = String(cString: sqlite3_errmsg(db))
+                print("Failure updating product quantity: \(errmsg)")
+            }
+        } else {
+            let errmsg = String(cString: sqlite3_errmsg(db))
+            print("Failure preparing update: \(errmsg)")
+        }
+        sqlite3_finalize(updateStatement)
+    }
+
+
+
+
     
     
     

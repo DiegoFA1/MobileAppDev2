@@ -19,7 +19,7 @@ struct ShoppingCartScreen: View {
     @State private var total: Double = 0
     
     var body: some View {
-        NavigationView{
+        //NavigationView{
             VStack {
                 //Text("Shopping Cart").font(.largeTitle)
                     //.padding()
@@ -91,7 +91,7 @@ struct ShoppingCartScreen: View {
                     }
             .padding(-14.0)
             .navigationBarTitle("Shopping Cart")
-        } // NavigationView
+         // NavigationView
     }
     
     func calculateTotal(){
