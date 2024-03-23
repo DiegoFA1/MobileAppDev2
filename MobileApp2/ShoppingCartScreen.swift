@@ -10,9 +10,12 @@ import SwiftUI
 struct ShoppingCartScreen: View {
     //@State private var shouldCalculate = false
     
-    @State private var productNames = ["Product 2", "Product 3"]
-    @State private var productPrices = [2.15, 10.55]
-    @State private var productQuantities: [Int] = [2, 1]
+    // @State private var productNames = ["Product 2", "Product 3"]
+    //@State private var productPrices = [2.15, 10.55]
+    //@State private var productQuantities: [Int] = [2, 1]
+    @State private var productList: [Product] = []
+    @State private var filteredProduct: [Product] = []
+ 
     
     @State private var subtotal: Double = 0
     @State private var tax: Double = 0
@@ -31,22 +34,23 @@ struct ShoppingCartScreen: View {
                     Text("Quatity")
                 }.padding([.top, .leading, .trailing], 25.0)
                     .fontWeight(.bold)
-                ForEach(0..<productNames.count, id: \.self) { index in
+                ForEach(filteredProduct.indices, id: \.self) { index in
+                    let product = filteredProduct[index]
                     HStack{
-                        Text(productNames[index])
+                        Text(product.name)
                         Spacer()
-                        Text("$\(productPrices[index], specifier: "%.2f")")
+                        Text("$\(product.price, specifier: "%.2f")")
                         Spacer()
                         Button(action:{
-                            if productQuantities[index] > 0 {
-                                productQuantities[index] -= 1
+                            if product.quantity > 0 {
+                                product.quantity -= 1
                             }
                         }) {
                             Text("-")
                         }
-                        Text("\(productQuantities[index])")
+                        Text("\(product.quantity)")
                         Button(action:{
-                            productQuantities[index] += 1
+                            product.quantity += 1
                         }) {
                             Text("+")
                         }
@@ -81,12 +85,15 @@ struct ShoppingCartScreen: View {
 
             } // VStack
             .onAppear {
-                        // Calculate initial values when the view appears
-                        //subtotal = productPrices.indices.reduce(0) {
-                        //    $0 + productPrices[$1] * Double(productQuantities[$1])
-                       // }
-                        //tax = subtotal * 0.13
-                        //total = subtotal + tax
+                self.productList = DBHelper.shared.readProducts()
+                
+                for product in productList{
+                    print("ID: \(product.id)")
+                    print("Name: \(product.name)")
+                    print("Price: \(product.price)")
+                    print("Quantity: \(product.quantity)")
+                }
+                self.filteredProduct = self.productList.filter {$0.quantity > 1}
                 calculateTotal()
                     }
             .padding(-14.0)
@@ -95,13 +102,22 @@ struct ShoppingCartScreen: View {
     }
     
     func calculateTotal(){
-        subtotal = productPrices.indices.reduce(0) {
-            $0 + productPrices[$1] * Double(productQuantities[$1])
+        //subtotal = productPrices.indices.reduce(0) {
+        //    $0 + productPrices[$1] * Double(productQuantities[$1])
+        //}
+        //tax = subtotal * 0.13
+        //total = subtotal + tax
+        subtotal = filteredProduct.reduce(0) {
+            $0 + $1.price * Double($1.quantity)
         }
         tax = subtotal * 0.13
         total = subtotal + tax
     }
-}
+    
+    func updateQuantity(at index: Int, to newValue: Int) {
+        DBHelper.shared.updateProductQuantity(id: productList[index].id, quantity: newValue)
+        productList[index].quantity = newValue
+    }}
 
 #Preview {
     ShoppingCartScreen()
