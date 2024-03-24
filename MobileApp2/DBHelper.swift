@@ -31,6 +31,7 @@ class DBHelper{
             return nil
         }else {
             print("Database Created with path \(path)")
+            print("path is: \(filepath)")
             return db
         }
     }
@@ -46,7 +47,9 @@ class DBHelper{
             if sqlite3_step(createTable) == SQLITE_DONE{
                 print("Table Group Created")
             }
-            
+            insertGroup1(name: "Grocery");
+            insertGroup1(name: "Electronics");
+            insertGroup1(name: "Home");
         } else {
             let errmsg = String(cString: sqlite3_errmsg(db))
             print("error droping group table: \(errmsg)")
@@ -126,8 +129,29 @@ class DBHelper{
         
     }
     
+    func getGroupByName(name:String) -> Int {
+        let getNameQuery = "SELECT * FROM groups WHERE name = ?;"
+        var statement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(self.db, getNameQuery, -1, &statement, nil) == SQLITE_OK{
+            sqlite3_bind_text(statement, 1, (name as NSString).utf8String, -1, nil)
+            
+            if sqlite3_step(statement) == SQLITE_ROW {
+                let id = sqlite3_column_int(statement, 0)
+                return Int(id)
+            } else{
+                let errmsg = String(cString: sqlite3_errmsg(db))
+                print("Error in getting group name: \(errmsg)")
+                return 0
+            }
+        }
+        return 0
+    }
+    
+    
+    
     func createProductTable(){
-        let createProductTableQuery = "CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price REAL, quantity INTEGER);"
+        let createProductTableQuery = "CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price REAL, quantity INTEGER, group_id INTEGER);"
         var createTableStatement: OpaquePointer? = nil
         
         if sqlite3_prepare_v2(self.db, createProductTableQuery, -1, &createTableStatement, nil) == SQLITE_OK {
@@ -139,17 +163,26 @@ class DBHelper{
             }
         }
         sqlite3_finalize(createTableStatement)
+        insertProduct(name: "Carrot", price: 2.99, quantity: 0, group_id:1)
+        insertProduct(name: "Tomato", price: 3.99, quantity: 0, group_id:1)
+        insertProduct(name: "Beef", price: 8.49, quantity: 0, group_id:1)
+        insertProduct(name: "Kids Tablet", price: 128.49, quantity: 0, group_id:2)
+        insertProduct(name: "4K TV", price: 899.99, quantity: 0, group_id:2)
+        insertProduct(name: "Pillow", price: 35.79, quantity: 0, group_id:3)
+        insertProduct(name: "Bowl Set", price: 36.49, quantity: 0, group_id:3)
+        
     }
     
     
-    func insertProduct(name: String, price: Double, quantity: Int) {
-        let insertQuery = "INSERT INTO products (name, price, quantity) VALUES (?, ?, ?);"
+    func insertProduct(name: String, price: Double, quantity: Int, group_id: Int) {
+        let insertQuery = "INSERT INTO products (name, price, quantity, group_id) VALUES (?, ?, ?, ?);"
         var insertStatement: OpaquePointer? = nil
         
         if sqlite3_prepare_v2(db, insertQuery, -1, &insertStatement, nil) == SQLITE_OK {
             sqlite3_bind_text(insertStatement, 1, (name as NSString).utf8String, -1, nil)
             sqlite3_bind_double(insertStatement, 2, price)
             sqlite3_bind_int(insertStatement, 3, Int32(quantity))
+            sqlite3_bind_int(insertStatement, 4, Int32(group_id))
             
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 print("Successfully inserted product.")
@@ -166,8 +199,8 @@ class DBHelper{
 
     
     
-    func readProducts() -> [Product] {
-        let query = "SELECT * FROM products;"
+    func readProducts(group_name: String) -> [Product] {
+        let query = "SELECT * FROM products WHERE group_name = ?;"
         var queryStatement: OpaquePointer? = nil
         var productList = [Product]()
         
@@ -176,8 +209,9 @@ class DBHelper{
                 //let id = sqlite3_column_int(queryStatement, 0)
                 let name = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
                 let price = sqlite3_column_double(queryStatement, 2)
-                let quantity = sqlite3_column_int(queryStatement, 3)
-                let product = Product(id: 0, name: name, price: price, quantity: Int(quantity))
+                let quantity = Int(sqlite3_column_int(queryStatement, 3))
+                let group_id = Int(sqlite3_column_int(queryStatement, 4))
+                let product = Product(id: 0, name: name, price: price, quantity: Int(quantity), group_id: Int(group_id))
                 productList.append(product)
             }
         } else {

@@ -42,7 +42,7 @@ struct GroupListScreen: View {
                 List{
                     ForEach(groupList){ group in
                         HStack{
-                            NavigationLink(destination: ProductListScreen()){
+                            NavigationLink(destination: ProductListScreen(group_id: <#Int#>, group: group)){
                                 Text(group.name)
                             }
                             Spacer()
