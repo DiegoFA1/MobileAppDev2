@@ -42,10 +42,11 @@ struct ProductListScreen: View {
             List{
                 HStack(alignment: .top){
                     Text("Name").frame(width: 50)
-                    Spacer()
+                        .padding(.trailing, 10.0)
                     Text("Price").frame(width: 60)
-                    Spacer()
-                    Text("Quatity")
+                    Text("Qty")
+                        .padding(.trailing, 35.0)
+                    Text("Actions")
                 }
                 .fontWeight(.bold)
                 ForEach(productList.indices, id: \.self){ index in
@@ -54,11 +55,8 @@ struct ProductListScreen: View {
                     HStack(spacing: 10){
                         Text(product.name).frame(width: 60, alignment: .leading)
                         
-                        Spacer()
-                        
                         Text(String(format: "$%.2f", product.price)).frame(width: 60, alignment: .leading)
                         
-                        Spacer()
                         Text("\(product.quantity)")
                         Stepper(value: Binding<Int>(
                             get: { productList[index].quantity },
@@ -184,6 +182,6 @@ struct ProductListScreen: View {
 }
 
 
-#Preview {
-    ProductListScreen(group_id: 1)
-}
+//#Preview {
+//    ProductListScreen(group_id: 1)
+//}

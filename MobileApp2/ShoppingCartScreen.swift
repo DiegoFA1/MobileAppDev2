@@ -136,12 +136,12 @@ struct ShoppingCartScreen: View {
             List {
                 HStack {
                     Text("Name").frame(width: 50)
-                    Spacer()
+                        .padding(.trailing, 10.0)
                     Text("Price").frame(width: 60)
-                    Spacer()
-                    Text("Quantity")
+                    Text("Qty")
+                        .padding(.trailing, 35.0)
+                    Text("Actions")
                 }
-                .padding()
                 .fontWeight(.bold)
                 ForEach(cartManager.cartItems.indices, id: \.self) { index in
                     let product = cartManager.cartItems[index]
@@ -214,6 +214,6 @@ struct ShoppingCartScreen: View {
     
 }
 
-#Preview {
-    ShoppingCartScreen()
-}
+//#Preview {
+//    ShoppingCartScreen()
+//}

@@ -144,6 +144,6 @@ struct GroupListScreen: View {
     
 }
 
-#Preview {
-    GroupListScreen()
-}
+//#Preview {
+//    GroupListScreen()
+//}
