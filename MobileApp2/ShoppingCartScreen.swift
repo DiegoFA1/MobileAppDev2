@@ -164,13 +164,7 @@ struct ShoppingCartScreen: View {
                 }
             }
             
-            Button("Calculate") {
-                calculateTotal()
-            }
-            .padding()
-            
-            Spacer()
-            
+                    
             HStack {
                 Text("Subtotal: ")
                 Spacer()
